@@ -1,14 +1,16 @@
-from tkinter import filedialog
-from Arquivo import isolarMensagens
+from turtle import Screen
 
 
-TIPO, TIME_STAMP, LONGITUDE, LATITUDE, ALTITUDE, BPM, N_PASSOS = list(range(7))
+def tratarEvento(xMouse, yMouse):
+	pass
 
-with open(filedialog.askopenfilename(filetypes = [("Text files", "*.txt")])) as arquivo:
-	mensagem = isolarMensagens(arquivo)
 
-# imprime tabela formatada
-#for i in mensagem:
-#	for x in i:
-#		print("{:24}".format(x), end='')
-#	print()
+screen = Screen()
+screen.title("Coiot")
+screen.setup(910, 512)
+screen.delay(0)
+
+screen.onclick(tratarEvento)
+screen.listen()
+
+screen.mainloop()
