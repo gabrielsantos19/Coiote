@@ -14,7 +14,7 @@ def isolarCorpoRegistro(arquivo):
 
 
 def isolarCorpoLap(arquivo):
-	pass
+	return []
 
 
 def isolarCorpoMensagem(tipo, arquivo):
