@@ -1,16 +1,23 @@
-from turtle import Screen
+from turtle import Turtle
+from Interface import iniciarInterface, selecionarArquivo, setArquivoInfo
 
 
 def tratarEvento(xMouse, yMouse):
-	pass
+	turtle.clear()
+	setArquivoInfo(selecionarArquivo())
+	iniciarInterface(turtle)
 
 
-screen = Screen()
+turtle = Turtle()
+turtle.hideturtle()
+turtle.speed(0)
+
+screen = turtle.getscreen()
 screen.title("Coiot")
 screen.setup(910, 512)
 screen.delay(0)
-
 screen.onclick(tratarEvento)
-screen.listen()
+
+iniciarInterface(turtle)
 
 screen.mainloop()
