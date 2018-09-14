@@ -1,11 +1,20 @@
 from turtle import Turtle
-from Interface import iniciarInterface, selecionarArquivo, setArquivoInfo
+from Interface import imprimirInterface, selecionarArquivo, setArquivoInfo
 
 
 def tratarEvento(xMouse, yMouse):
-	turtle.clear()
 	setArquivoInfo(selecionarArquivo())
-	iniciarInterface(turtle)
+	turtle.clear()
+	imprimirInterface(turtle)
+
+
+def atualizar():
+	global oldWidth, oldHeight
+	if oldWidth != screen.window_width() or oldHeight != screen.window_height():
+		oldWidth, oldHeight = screen.window_width(), screen.window_height()
+		turtle.clear()
+		imprimirInterface(turtle)
+	screen.ontimer(atualizar, 300)
 
 
 turtle = Turtle()
@@ -18,6 +27,10 @@ screen.setup(910, 512)
 screen.delay(0)
 screen.onclick(tratarEvento)
 
-iniciarInterface(turtle)
+oldWidth, oldHeight = screen.window_width(), screen.window_height()
+mensagem = []
+
+imprimirInterface(turtle)
+atualizar()
 
 screen.mainloop()

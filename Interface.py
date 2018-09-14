@@ -17,7 +17,7 @@ def imprimirTexto(turtle, objTxt):
 	turtle.write(objTxt["texto"], False, "left", (objTxt["fonte"], int(screen.window_height() * objTxt["size"]), objTxt["type"]))
 
 
-def iniciarInterface(turtle):
+def imprimirInterface(turtle):
 	imprimirTexto(turtle, COIOT)
 	imprimirTexto(turtle, ARQUIVO)
 	imprimirTexto(turtle, DIRETORIO)
