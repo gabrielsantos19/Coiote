@@ -1,11 +1,9 @@
 from turtle import Turtle
-from Interface import imprimirInterface, selecionarArquivo, setArquivoInfo
+from Interface import imprimirInterface
 
 
 def tratarEvento(xMouse, yMouse):
-	setArquivoInfo(selecionarArquivo())
-	turtle.clear()
-	imprimirInterface(turtle)
+	pass
 
 
 def atualizar():
@@ -28,7 +26,7 @@ screen.delay(0)
 screen.onclick(tratarEvento)
 
 oldWidth, oldHeight = screen.window_width(), screen.window_height()
-mensagem = []
+mensagens = []
 
 imprimirInterface(turtle)
 atualizar()

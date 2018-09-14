@@ -23,7 +23,10 @@ def imprimirInterface(turtle):
 	imprimirTexto(turtle, DIRETORIO)
 
 
-# Objetos de texto
+# Objetos da interface
 COIOT = {"texto":"Coiot", "fonte": "Arial", "size": 0.07, "type": "normal", "xPos": -0.48, "yPos": 0.38}
+COIOT_Rect = {}
 ARQUIVO = {"texto":"Nenhum arquivo selecionado", "fonte": "Arial", "size": 0.03, "type": "bold", "xPos": -0.32, "yPos": 0.43}
+ARQUIVO_Rect = {}
 DIRETORIO = {"texto":"...", "fonte": "Arial", "size": 0.02, "type": "italic", "xPos": -0.32, "yPos": 0.395}
+DIRETORIO_Rect = {}

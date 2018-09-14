@@ -3,14 +3,14 @@ def isolarCorpoEvento(arquivo):
 
 
 def isolarCorpoRegistro(arquivo):
-	registro = []
+	registros = []
 
 	linha = arquivo.readline()
 	while linha[0] != '#':
-		registro.append(linha[:-1])
+		registros.append(linha[:-1])
 		linha = arquivo.readline()
 
-	return registro
+	return registros
 
 
 def isolarCorpoLap(arquivo):
@@ -29,9 +29,9 @@ def isolarCorpoMensagem(tipo, arquivo):
 
 
 def isolarMensagens(arquivo):
-	mensagem = []
+	mensagens = []
 
 	for linha in arquivo:
-		mensagem.append(linha.split() + isolarCorpoMensagem(linha[0], arquivo))
+		mensagens.append(linha.split() + isolarCorpoMensagem(linha[0], arquivo))
 
-	return mensagem
+	return mensagens
