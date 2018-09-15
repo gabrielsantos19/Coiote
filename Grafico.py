@@ -1,8 +1,4 @@
-def gridx(duracao, rect)
-    pos_x = rect[0]
-    pos_y = rect[1]
-    width = rect[2]
-    height = rect[3]
+def gridx(duracao, pos_x, pos_y, width, height)
     cont = 0
     pos = cont + pos_x
     interv = duracao / width
@@ -18,11 +14,7 @@ def gridx(duracao, rect)
         turt.up()
 
 
-def gridy(maximo, rect):
-    pos_x = rect[0]
-    pos_y = rect[1]
-    width = rect[2]
-    height = rect[3]
+def gridy(maximo, pos_x, pos_y, width, height):
     cont = 0
     pos = cont + pos_y
     interv = maximo / 200
@@ -38,8 +30,12 @@ def gridy(maximo, rect):
         turt.up()
 
 
-def desenharGrid(rect, lst):
-    gridx(dominio[-1] - dominio[0], rect)
+def desenharGrid(dom, lst, rect):
+    pos_x = rect[0]
+    pos_y = rect[1]
+    width = rect[2]
+    height = rect[3]
+    gridx(dom[-1] - dom[0], pos_x, pos_y, width, height)
     gridy(max(lst), rect)
 
 
@@ -60,9 +56,7 @@ def desenharEixos(rect):
     turtle.up()
 
 
-def desenharLinha(rect, lst):
-    pos_x = rect[0]
-    pos_y = rect[1]
+def desenharLinha(lst, pos_x, pos_y):
     turtle.goto(pos_x, (pos_y + lst[0]) * escy)
     turtle.down()
     for y in lst[1:]:
@@ -71,10 +65,20 @@ def desenharLinha(rect, lst):
     
 
 def desenharGrafico(rect, dominio, imagem):
-    escalas = (rect[2]/(x[-1] - x[0]), rect[3]/max(imagem[]) #--> A imagem do maior
-    for lst in imagem:
-        desenharEixos(rect)
-        desenharGrid(rect, dominio)
-        desenharLinha(rect, lst)
+    i_maior = 0
+    for i in range(len(imagem)):
+        if max(len[i]) > max(len[i_maior]):
+            i_maior = i
+
+    escalas = (rect[2]/(dominio[-1] - dominio[0]), rect[3]/max(imagem[i_maior]) #--> A imagem do maior
+
+    cores = ["red", "blue"]
+    cores.insert("black", i_maior)
+    for i in range(len(imagem)):
+        turtle.color(cores[i])
+        if i == i_maior:
+            desenharEixos(rect)
+            desenharGrid(dominio, imagem[i], rect)
+        desenharLinha(imagem[i], rect)
 
 # Estava usando um espaçamento de 250 pixels entre um gráfico e outro
