@@ -8,13 +8,17 @@ def selecionarArquivo():
 def setArquivoInfo(diretorio):
 	ARQUIVO["texto"] = diretorio.split('/')[-1][:-4]
 	DIRETORIO["texto"] = '"' + diretorio + '"'
-
+	
 
 def imprimirTexto(turtle, objTxt):
 	screen = turtle.getscreen()
+	#Troque 1366 e 768 pelas dimensões de sua tela
+	escx = screen.window_width() / 1366
+	escy = screen.window_height() / 768
+	#
 	turtle.up()
-	turtle.goto(-screen.window_width() * 0.5 + objTxt["xPos"], screen.window_height() * 0.5 - objTxt["yPos"])
-	turtle.write(objTxt["texto"], False, "left", (objTxt["fonte"], objTxt["size"], objTxt["tipo"]))
+	turtle.goto((-1366 * 0.5 + objTxt["xPos"]) * escx, (768 * 0.5 - objTxt["yPos"]) * escy)
+	turtle.write(objTxt["texto"], False, "left", (objTxt["fonte"], int(objTxt["size"]*escx*escy), objTxt["tipo"]))
 
 
 def imprimirMenu(turtle, listaDeItens, objTxtBase, espacamentoVertical):
