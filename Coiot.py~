@@ -3,13 +3,15 @@ from Interface import imprimirInterface, selecionarArquivo, setArquivoInfo
 
 
 def tratarEvento(xMouse, yMouse):
-    # O problema é o tamanho da fonte
+    print(xMouse, yMouse)
     escx = screen.window_width() / 1366
     escy = screen.window_height() / 768
     coords = [(-647*escx, -547*escx, 174*escy, 189*escy)]
+    print(coords[0])
     i = 0
     pull = 0
     while i < len(coords) and pull == 0:
+        print("a")
         if coords[i][0] <= xMouse <= coords[i][1] and coords[i][2] <= yMouse <= coords[i][3]:
             print("foi")
             pull += 1
