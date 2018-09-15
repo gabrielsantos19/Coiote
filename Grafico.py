@@ -10,5 +10,8 @@ def desenharLinha():
 	pass
 
 
-def desenharGrafico():
+def desenharGrafico(rect, dominio, imagem):
+	# Rect = {xPos, yPos, width, height}
+	# dominio = []
+	# imagem = [[][][]...]
 	pass
