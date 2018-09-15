@@ -5,36 +5,38 @@ def selecionarArquivo():
 	return filedialog.askopenfilename(filetypes = [("Text files", "*.txt")])
 
 
-def setArquivoInfo(diretorio):
-	ARQUIVO["texto"] = diretorio.split('/')[-1][:-4]
-	DIRETORIO["texto"] = '"' + diretorio + '"'
+def transladar(screen, x = None, y = None):
+	if x != None and y != None:
+		return -screen.window_width() * 0.5 + x, screen.window_height() * 0.5 - y
+	elif x != None:
+		return -screen.window_width() * 0.5 + x
+	elif y != None:
+		return screen.window_height() * 0.5 - y
 
 
 def imprimirTexto(turtle, objTxt):
 	screen = turtle.getscreen()
 	turtle.up()
-	turtle.goto(-screen.window_width() * 0.5 + objTxt["xPos"], screen.window_height() * 0.5 - objTxt["yPos"])
+	turtle.goto(transladar(screen, objTxt["xPos"], objTxt["yPos"]))
 	turtle.write(objTxt["texto"], False, "left", (objTxt["fonte"], objTxt["size"], objTxt["tipo"]))
 
 
 def imprimirMenu(turtle, listaDeItens, objTxtBase, espacamentoVertical):
-	TEMP = objTxtBase.copy()
+	ITEM = objTxtBase.copy()
 	for item in listaDeItens:
-		TEMP["texto"] = item
-		TEMP["yPos"] += espacamentoVertical
-		imprimirTexto(turtle, TEMP)
+		ITEM["texto"] = item
+		ITEM["yPos"] += espacamentoVertical
+		imprimirTexto(turtle, ITEM)
 
 
-def imprimirInterface(turtle):
-	imprimirTexto(turtle, COIOT)
-	imprimirTexto(turtle, ARQUIVO)
-	imprimirTexto(turtle, DIRETORIO)
-	imprimirMenu(turtle, itensDoMenu, ITEM_MENU, 50)
-
-
-COIOT = dict(texto = "Coiot", fonte = "Arial", size = 50, tipo = "normal", xPos = 35, yPos = 90)
-ARQUIVO = dict(texto = "Nenhum arquivo selecionado", fonte = "Arial", size = 20, tipo = "bold", xPos = 240, yPos = 50)
-DIRETORIO = dict(texto = "...", fonte = "Arial", size = 15, tipo = "italic", xPos = ARQUIVO["xPos"], yPos = 80)
-
-ITEM_MENU = dict(texto = "", fonte = "Arial", size = 15, tipo = "normal", xPos = 35, yPos = 160)
-itensDoMenu = ("Resumo geral", "Resumo por km", "Resumo por volta", "Gráficos")
+def desenharFillRect(turtle, rect, cor):
+	screen = turtle.getscreen()
+	turtle.up()
+	turtle.goto(transladar(screen, rect["xPos"], rect["yPos"]))
+	turtle.fillcolor(cor)
+	turtle.pensize(1)
+	turtle.begin_fill()
+	turtle.setx(transladar(screen, x = rect["xPos"] + rect["width"]))
+	turtle.sety(transladar(screen, y = rect["yPos"] + rect["height"]))
+	turtle.setx(transladar(screen, x = rect["xPos"]))
+	turtle.end_fill()
