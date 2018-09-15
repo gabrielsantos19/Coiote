@@ -1,37 +1,40 @@
 def isolarCorpoEvento(arquivo):
-	return [arquivo.readline()[0]]
+	return {"evento": arquivo.readline()[0]}
 
 
 def isolarCorpoRegistro(arquivo):
-	registros = []
+	atributos = {'n': "longitude", 'l': "latitude", 'a': "altitude", 'b': "bpm", 'p': "numeroDePassos"}
+	registros = {}
 
 	linha = arquivo.readline()
 	while linha[0] != '#':
-		registros.append(linha[:-1])
+		registros.update({atributos[linha[0]]: linha.split()[1]})
 		linha = arquivo.readline()
 
 	return registros
 
 
 def isolarCorpoLap(arquivo):
-	return []
+	return {}
 
 
-def isolarCorpoMensagem(tipo, arquivo):
-	if tipo == 'e':
+def isolarCorpoMensagem(tipoDaMensagem, arquivo):
+	if tipoDaMensagem == 'e':
 		return isolarCorpoEvento(arquivo)
-	elif tipo == 'r':
+	elif tipoDaMensagem == 'r':
 		return isolarCorpoRegistro(arquivo)
-	elif tipo == 'l':
+	elif tipoDaMensagem == 'l':
 		return isolarCorpoLap(arquivo)
 	else:
-		return []
+		return {}
 
 
 def isolarMensagens(arquivo):
 	mensagens = []
 
 	for linha in arquivo:
-		mensagens.append(linha.split() + isolarCorpoMensagem(linha[0], arquivo))
+		tipo, timeStamp = linha.split()
+		mensagens.append({"tipo": tipo, "timeStamp": timeStamp})
+		mensagens[-1].update(isolarCorpoMensagem(tipo, arquivo))
 
 	return mensagens

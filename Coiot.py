@@ -1,9 +1,12 @@
 from turtle import Turtle
-from Interface import imprimirInterface
+from Interface import imprimirInterface, selecionarArquivo, setArquivoInfo
 
 
 def tratarEvento(xMouse, yMouse):
-	pass
+	diretorioDoArquivo = selecionarArquivo()
+	setArquivoInfo(diretorioDoArquivo)
+	turtle.clear()
+	imprimirInterface(turtle)
 
 
 def atualizar():
