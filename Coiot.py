@@ -42,7 +42,7 @@ def tratarEvento(xMouse, yMouse):
 		pass
 	elif abaSelecionada == "Sair":
 		screen.bye()
-	elif abaSelecionada == "Mini mapa":
+	elif abaSelecionada == "Mini mapa" and mensagens:
 		turtles["aba"].clear()
 		desenharCircuito(turtles["miniMapa"], ABA_Rect, coordenadas)
 
