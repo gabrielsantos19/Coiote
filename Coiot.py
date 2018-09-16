@@ -47,7 +47,7 @@ def tratarEvento(xMouse, yMouse):
 		elif abaSelecionada == "Gráficos":
 			subMenu = [["Ritmo", "Altitude", "BPM", "Zonas de BPM"], ["Sobrepor gráficos"]]
 			pass
-		elif abaSelecionada == "Mini mapa" and mensagens:
+		elif abaSelecionada == "Mapa" and mensagens:
 			desenharCircuito(turtles["aba"], CONTEUDO_ABA_Rect, coordenadas)
 
 		if subMenu:

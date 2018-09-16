@@ -32,7 +32,7 @@ def getItemSelecionado(screen, xMouse, yMouse):
 	if checarSelecao(screen, MENU_Rect, xMouse, yMouse):
 		return getItemSelecionadoMenu(screen, xMouse, yMouse)
 	elif checarSelecao(screen, MINI_MAPA_Rect, xMouse, yMouse):
-		return "Mini mapa"
+		return "Mapa"
 
 
 def checarSelecao(screen, rect, xMouse, yMouse):
@@ -109,7 +109,9 @@ ITEM_MENU=dict(texto='', fonte="Arial", size=15, tipo="bold", cor="#7a7a7a", xPo
 
 MINI_MAPA_Rect = dict(xPos=7, yPos=MENU_Rect["yPos"] + MENU_Rect["height"] + 7, width=MENU_Rect["width"], height=MENU_Rect["width"])
 
-ABA_Rect = dict(xPos=CABECALHO_Rect["xPos"], yPos=CABECALHO_Rect["yPos"] + CABECALHO_Rect["height"] + 7, width=1000, height=700)
-TITULO_ABA = dict(texto="", fonte="Arial", size=25, tipo="bold", cor="#7a7a7a", xPos=ABA_Rect["xPos"]+30, yPos=ABA_Rect["yPos"]+40)
-SUB_MENU_ABA = dict(texto="", fonte="Arial", size=12, tipo="normal", cor="#7a7a7a", xPos=TITULO_ABA["xPos"]+300, yPos=TITULO_ABA["yPos"])
-CONTEUDO_ABA_Rect = dict()
+ABA_Rect = dict(xPos=CABECALHO_Rect["xPos"], yPos=CABECALHO_Rect["yPos"] + CABECALHO_Rect["height"] + 7, width=1000, height=575)
+TITULO_ABA = dict(texto="", fonte="Arial", size=25, tipo="bold", cor="#7a7a7a", xPos=ABA_Rect["xPos"]+30, yPos=ABA_Rect["yPos"]+60)
+SUB_MENU_ABA = dict(texto="", fonte="Arial", size=12, tipo="normal", cor="#7a7a7a", xPos=TITULO_ABA["xPos"]+300, yPos=TITULO_ABA["yPos"]-30)
+CONTEUDO_ABA_Rect = ABA_Rect.copy()
+CONTEUDO_ABA_Rect["yPos"] += 110
+CONTEUDO_ABA_Rect["height"] -= CONTEUDO_ABA_Rect["yPos"] -ABA_Rect["yPos"]

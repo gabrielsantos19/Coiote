@@ -15,12 +15,9 @@ def imprimirResumoPorKm(turtle, rect, resumoPorKm):
 
 def imprimirResumoGeral(turtle, rect, resumoGeral):
     # resumoGeral possui o q gerarResumoGeral retornar
-    TITULO_ABA = dict(texto="Resumo geral", fonte="Arial", size=23, tipo="bold", cor="#7a7a7a", xPos=rect["xPos"] + 50, yPos=rect["yPos"] + 50)
-    imprimirTexto(turtle, TITULO_ABA)
-
-    ITEM = dict(texto="", fonte="Arial", size=15, tipo="", cor="#7a7a7a", xPos=rect["xPos"] + 50, yPos=rect["yPos"] + 80)
+    ITEM = dict(texto="", fonte="Arial", size=15, tipo="", cor="#7a7a7a", xPos=rect["xPos"] + 30, yPos=rect["yPos"])
     for item in resumoGeral.items():
-            ITEM["xPos"] = rect["xPos"] + 50
+            ITEM["xPos"] = rect["xPos"] + 40
             for i in item:
                     ITEM["texto"] = i
                     imprimirTexto(turtle, ITEM)
