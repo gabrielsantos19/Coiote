@@ -49,6 +49,17 @@ def imprimirTexto(turtle, objTxt):
 	turtle.write(objTxt["texto"], False, "left", (objTxt["fonte"], objTxt["size"], objTxt["tipo"]))
 
 
+def imprimirSubMenu(turtle, subMenu):
+	TEMP = SUB_MENU_ABA.copy()
+	for i in subMenu:
+		TEMP["xPos"] = SUB_MENU_ABA["xPos"]
+		for x in i:
+			TEMP["texto"] = x
+			imprimirTexto(turtle, TEMP)
+			TEMP["xPos"] += 500 / len(i)
+		TEMP["yPos"] += 30
+
+
 def imprimirMenu(turtle, listaDeItens, objTxtBase, espacamentoVertical):
 	ITEM = objTxtBase.copy()
 	for item in listaDeItens:
@@ -99,3 +110,6 @@ ITEM_MENU=dict(texto='', fonte="Arial", size=15, tipo="bold", cor="#7a7a7a", xPo
 MINI_MAPA_Rect = dict(xPos=7, yPos=MENU_Rect["yPos"] + MENU_Rect["height"] + 7, width=MENU_Rect["width"], height=MENU_Rect["width"])
 
 ABA_Rect = dict(xPos=CABECALHO_Rect["xPos"], yPos=CABECALHO_Rect["yPos"] + CABECALHO_Rect["height"] + 7, width=1000, height=700)
+TITULO_ABA = dict(texto="", fonte="Arial", size=25, tipo="bold", cor="#7a7a7a", xPos=ABA_Rect["xPos"]+30, yPos=ABA_Rect["yPos"]+40)
+SUB_MENU_ABA = dict(texto="", fonte="Arial", size=12, tipo="normal", cor="#7a7a7a", xPos=TITULO_ABA["xPos"]+300, yPos=TITULO_ABA["yPos"])
+CONTEUDO_ABA_Rect = dict()
