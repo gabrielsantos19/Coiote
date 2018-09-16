@@ -24,6 +24,7 @@ def tratarEvento(xMouse, yMouse):
 			for i in turtles:
 				turtles[i].clear()
 			imprimirArquivoInfo(turtles["arquivoInfo"])
+			desenharCircuito(turtles["miniMapa"], MINI_MAPA_Rect, coordenadas)
 	elif abaSelecionada == "Resumo geral":
 		resumoGeral = gerarResumoGeral(mensagens)
 		turtles["aba"].clear()
@@ -42,7 +43,8 @@ def tratarEvento(xMouse, yMouse):
 	elif abaSelecionada == "Sair":
 		screen.bye()
 	elif abaSelecionada == "Mini mapa":
-		pass
+		turtles["aba"].clear()
+		desenharCircuito(turtles["miniMapa"], ABA_Rect, coordenadas)
 
 
 def atualizar():
@@ -54,7 +56,8 @@ def atualizar():
 			turtles[i].clear()
 		imprimirInterface(turtle)
 		imprimirArquivoInfo(turtles["arquivoInfo"])
-		desenharCircuito(turtles["miniMapa"], MINI_MAPA_Rect, coordenadas)
+		if mensagens:
+			desenharCircuito(turtles["miniMapa"], MINI_MAPA_Rect, coordenadas)
 		if abaSelecionada == "Resumo geral":
 			imprimirResumoGeral(turtles["aba"], ABA_Rect, resumoGeral)
 		elif abaSelecionada == "Resumo por km":
