@@ -19,7 +19,7 @@ def isolarCorpoRegistro(arquivo):
 
 	linha = arquivo.readline()
 	while linha[0] != '#':
-		registros.update({atributos[linha[0]]: float(linha.split()[1])})
+		registros.update({atributos[linha[0]]: linha.split()[1]})
 		linha = arquivo.readline()
 
 	return registros
