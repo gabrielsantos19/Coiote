@@ -49,6 +49,7 @@ def desenharCircuito(turtle, rect, listaDeGeolocalizacoes):
     distAtual = 0
     distTotal = Calculos.Distancia(listaDeGeolocalizacoes)
     alfa = 0
+    turtle.up()
 
     for i in range(len(coordsTemp)):
         try:

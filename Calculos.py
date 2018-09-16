@@ -1,6 +1,6 @@
 from geopy import distance
 
-"""def findices(lst):
+def findices(lst):
     indices = []
     i_inicial = 0
     i_final = 0
@@ -41,10 +41,10 @@ def media_pond(lst):
     return resultado
 
 def duracao(tempos):
-    return tempos[-1] - tempos[0]"""
+    return tempos[-1] - tempos[0]
 
 def Distancia(Geolocs):
-    delta_space = 0
+    delta_space = 0.0
     i = 1
     while i != len(Geolocs):
         try:    
@@ -55,13 +55,15 @@ def Distancia(Geolocs):
     return delta_space
 
 
-"""def ritmo(regis, lat, longi):
-    return (regis[-1]-regis[0])/60 // distancia(lat, longi)
+"""def ritmo(regis, Geolocs):
+    return (regis[-1]-regis[0])/60 // distancia(Geolocs)
 
-def ritmos(regis, lat, longi):
+
+def Ritmos(regis, Geolocs):
     resultado = []
     for i in range(1, len(regis)):
-        resultado.append(ritmo(regis[i-1:i+1], lat[i-1:i+1], longi[i-1:i+1]))
+        try:
+            resultado.append((regis[i-1] - regis[i]) / 60 // Distancia(Geolocs))
     return resultado
 
 def cadencia(tempos, passos):
@@ -87,4 +89,10 @@ def percurso(lat, longi):
             dif_lat, dif_longi = infos[0], infos[1]
         coords.append(((infos[0]-dif_lat)*0.15, (infos[1]-dif_longi)*0.15))
         print(coords[-1])
-    return coords"""
+    return coords
+
+
+def converterTempo(tempo):
+    return time.strtime("%H:%M:%S", time.gmtime(tempo))"""
+
+
