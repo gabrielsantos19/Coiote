@@ -68,7 +68,6 @@ def imprimirInterface():
 	
 	if mensagens:
 		desenharCircuito(turtle, MINI_MAPA_Rect, selecionarEmRegistros([x for x in mensagens if x["tipo"] == 'r'], ["longitude", "latitude"]))
-
 	
 	if abaSelecionada == "Resumo geral":
 		imprimirResumoGeral(turtle, ABA_Rect, resumoGeral)
