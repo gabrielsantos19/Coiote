@@ -3,71 +3,59 @@ from utm import from_latlon
 import Calculos
 
 
-def gridx(duracao, pos_x, pos_y, width, height):
+def gridx(duracao, rect, x, y):
     cont = 0
-    pos = cont + pos_x
+    pos = cont + x + 10
     interv = duracao / width
-    while pos <= pos_x + width:
-        turtle.goto(pos, pos_y - 25)
+    while pos <= x + rect["width"] - 5:
+        turtle.goto(pos, y - rect["height"] + 5)
         turtle.write(int(cont * interv), align="center")
-        turt.goto(pos, pos_y)
+        turt.goto(pos, y - rect["height"] + 7)
         turt.down()
-        turt.goto(pos, pos_y - 3)
-        turt.goto(pos, pos_y + height + 3)
-        pos += width // 10
-        cont += width // 10
+        turt.goto(pos, y - rect["height"] + 13)
+        pos += rect["width"] - 15 // 10
+        cont += rect["width"] - 15 // 10
         turt.up()
 
 
-def gridy(maximo, pos_x, pos_y, width, height):
+def gridy(maximo, rect, x, y):
     cont = 0
-    pos = cont + pos_y
+    pos = cont + y - rect["height"] + 10
     interv = maximo / 200
-    while pos <= pos_y + 200:
-        turtle.goto(pos_x - 12, pos - 8)
+    while pos <= y - 5:
+        turtle.goto(x - 2, pos - 8)
         turt.write(int(cont * interv, align="right"))
-        turt.goto(pos_x, pos)
+        turt.goto(x + 7, pos)
         turt.down()
-        turt.goto(pos_x - 3, pos)
-        turt.goto(pos_x + width + 3, pos)
-        pos += height // 10
-        cont += height // 10 
+        turt.goto(x + rect["width"] - 5, pos)
+        pos += rect["height"] - 15 // 10
+        cont += rect["height"] - 15 // 10 
         turt.up()
 
 
-def desenharGrid(dom, lst, rect):
-    pos_x = rect["xPos"]
-    pos_y = rect["yPos"]
-    width = rect["width"]
-    height = rect["height"]
-    gridx(dom[-1] - dom[0], pos_x, pos_y, width, height)
-    gridy(max(lst), rect)
+def desenharGrid(dom, lst, rect, x, y):
+    gridx(dom[-1] - dom[0], rect, x, y)
+    gridy(max(lst), rect, x, y)
 
 
-def desenharEixos(rect):
-    pos_x = rect["xPos"]
-    pos_y = rect["yPos"]
-    width = rect["width"]
-    height = rect["height"]
+def desenharEixos(rect, x, y):
     #eixo x
-    turtle.goto(pox_x - 10, pos_y)
+    turtle.goto(x + 10, pos_y)
     turtle.down()
-    turtle.goto(pos_x + width + 10, pos_y)
+    turtle.goto(x + 10, y - rect["height"] + 10)
     turtle.up()
     #eixo y
-    turtle.goto(pos_x, pos_y - 10)
+    turtle.goto(x + 5, y - rect["height"] + 10)
     turtle.down()
-    turtle.goto(pos_x, pos_y + height + 10)
+    turtle.goto(x + rect["width"] - 5, y - rect["height"] + 10) 
     turtle.up()
 
 
-def desenharLinha(lst, rect, escs):
-    pos_x = rect["xPos"]
-    pos_y = rect["yPos"]
-    turtle.goto(pos_x, (pos_y + lst[0]) * escs[1])
+def desenharLinha(lst, x, y, escs, rect):
+    turtle.goto(x + 10, (y + 10 - rect["height"] + lst[0]) * escs[1])
     turtle.down()
-    for y in lst[1:]:
-        turtle.goto((pos_x + i) * escs[0], (pos_y + y) * escs[1])
+    for im in lst[1:]:
+        turtle.goto((x + 10 + i) * escs[0], (y + im + 10) * escs[1])
         i += 1
 
 
@@ -99,9 +87,9 @@ def desenharGrafico(turtle, rect, dominio, imagem, nomeDaImagem):
     for i in range(len(imagem)):
         turtle.color(cores[i])
         if i == iMaior:
-            desenharEixos(rect)
-            desenharGrid(dominio, imagem[i], rect)
-        desenharLinha(imagem[i], rect, escalas)
+            desenharEixos(rect, x, y)
+            desenharGrid(dominio, imagem[i], rect, x, y)
+        desenharLinha(imagem[i], x, y, escalas, rect)
 #---------------------------------------------------------------------------------------------------------------------
     
     
