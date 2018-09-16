@@ -1,6 +1,8 @@
 from turtle import Turtle
-from Interface import *
-from Mensagem import isolarMensagens
+from Interface import checarSelecao, desenharFillRect, imprimirTexto, imprimirMenu, selecionarArquivo
+from Mensagem import isolarMensagens, selecionarEmRegistros
+from Grafico import desenharGrafico, desenharCircuito
+from Resumo import *
 
 
 def setArquivoInfo(diretorio):
@@ -12,7 +14,7 @@ def getItemSelecionadoMenu(xMouse, yMouse):
 	TEMP_BOX = MENU_Rect.copy()
 	TEMP_BOX["height"] = MENU_Rect["height"] / len(itensDoMenu)
 	for item in itensDoMenu:
-		if checarSelecao(TEMP_BOX, xMouse, yMouse):
+		if checarSelecao(screen, TEMP_BOX, xMouse, yMouse):
 			return item
 		TEMP_BOX["yPos"] += TEMP_BOX["height"]
 
@@ -32,32 +34,50 @@ def carregarArquvio(diretorio):
 
 def tratarEvento(xMouse, yMouse):
 	selecao = getItemSelecionado(xMouse, yMouse)
-	if selecao == "Abrir arquivo":
-		diretorio = selecionarArquivo()
-		if diretorio: carregarArquvio(diretorio)
+	if selecao == "Sair":
+		screen.bye()
+	elif selecao:
+		global abaSelecionada, resumoGeral, resumoPorKm, resumoPorVolta
+		abaSelecionada = selecao
+		if selecao == "Abrir arquivo":
+			diretorio = selecionarArquivo()
+			if diretorio:
+				carregarArquvio(diretorio)
+		elif selecao == "Resumo geral":
+			resumoGeral = gerarResumoGeral(mensagens)
+		elif selecao == "Resumo por km":
+			resumoPorKm = gerarResumoPorKm(mensagens)
+		elif selecao == "Resumo por volta":
+			resumoPorVolta = gerarResumoPorVolta(mensagens)
+		elif selecao == "Gráficos":
+			pass
 		turtle.clear()
 		imprimirInterface()
-	elif selecao == "Resumo geral":
-		
-		pass
-	elif selecao == "Resumo por km":
-		pass
-	elif selecao == "Resumo por volta":
-		pass
-	elif selecao == "Gráficos":
-		pass
-	elif selecao == "Sair":
-		screen.bye()
 
 
 def imprimirInterface():
 	desenharFillRect(turtle, COIOT_Rect, "#57ff4f")
 	desenharFillRect(turtle, CABECALHO_Rect, "#ffffff")
 	desenharFillRect(turtle, MENU_Rect, "#ffffff")
+	desenharFillRect(turtle, MINI_MAPA_Rect, "#ffffff")
+	desenharFillRect(turtle, ABA_Rect, "#ffffff")
 	imprimirTexto(turtle, COIOT)
 	imprimirTexto(turtle, ARQUIVO)
 	imprimirTexto(turtle, DIRETORIO)
 	imprimirMenu(turtle, itensDoMenu, ITEM_MENU, 50)
+	
+	if mensagens:
+		desenharCircuito(turtle, MINI_MAPA_Rect, selecionarEmRegistros([x for x in mensagens if x["tipo"] == 'r'], ["longitude", "latitude"]))
+
+	
+	if abaSelecionada == "Resumo geral":
+		imprimirResumoGeral(turtle, ABA_Rect, resumoGeral)
+	elif abaSelecionada == "Resumo por km":
+		imprimirResumoPorKm(turtle, ABA_Rect, resumoPorKm)
+	elif abaSelecionada == "Resumo por volta":
+		imprimirResumoPorVolta(turtle, ABA_Rect, resumoPorVolta)
+	elif abaSelecionada == "Gráficos":
+		pass
 
 
 def atualizar():
@@ -92,13 +112,17 @@ itensDoMenu=("Abrir arquivo", "Resumo geral", "Resumo por km", "Resumo por volta
 MENU_Rect=dict(xPos=7, yPos=CABECALHO_Rect["height"] + 7 + 7, width=250, height=53 * len(itensDoMenu))
 ITEM_MENU=dict(texto='', fonte="Arial", size=15, tipo="bold", cor="#7a7a7a", xPos=MENU_Rect["xPos"] + 30, yPos=MENU_Rect["yPos"] - 5)
 
+MINI_MAPA_Rect = dict(xPos=7, yPos=MENU_Rect["yPos"] + MENU_Rect["height"] + 7, width=MENU_Rect["width"], height=MENU_Rect["width"])
+ABA_Rect = dict(xPos=CABECALHO_Rect["xPos"], yPos=CABECALHO_Rect["yPos"] + CABECALHO_Rect["height"] + 7, width=1000, height=700)
 
 oldWidth, oldHeight = screen.window_width(), screen.window_height()
 mensagens = []
-turtleResumo = turtle
-turtleGrafico = turtle
+abaSelecionada = None
+resumoGeral = None
+resumoPorKm = None
+resumoPorVolta = None
 
-imprimirInterface()
 atualizar()
+imprimirInterface()
 
 screen.mainloop()

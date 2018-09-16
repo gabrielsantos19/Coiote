@@ -1,3 +1,14 @@
+def selecionarEmRegistros(registros, atributos):
+	selecionados = []
+	for registro in registros:
+		temp = {}
+		for key in registro:
+			if key in atributos:
+				temp.update({key: registro[key]})
+		selecionados.append(temp)
+	return selecionados
+
+
 def isolarCorpoEvento(arquivo):
 	return {"evento": arquivo.readline()[0]}
 
