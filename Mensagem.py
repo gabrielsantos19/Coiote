@@ -1,6 +1,6 @@
-def selecionarEmRegistros(registros, atributos):
+def selecionarEmRegistros(mensagens, atributos):
 	selecionados = []
-	for registro in registros:
+	for registro in [x for x in mensagens if x["tipo"] == 'r']:
 		temp = {}
 		for key in registro:
 			if key in atributos:
@@ -42,7 +42,8 @@ def isolarCorpoMensagem(tipoDaMensagem, arquivo):
 
 def isolarMensagens(arquivo):
 	mensagens = []
-
+	
+	arquivo.readline()
 	for linha in arquivo:
 		tipo, timeStamp = linha.split()
 		mensagens.append({"tipo": tipo, "timeStamp": timeStamp})
