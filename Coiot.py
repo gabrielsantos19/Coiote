@@ -36,7 +36,7 @@ def desenharGraficos():
 
 
 def tratarEventoSubMenu(selecao, xMouse, yMouse):
-        global considerarPausa, subMenu, msgSobreporGraficos, msgConsiderarPausa, sobreporGraficos
+        global considerarPausa, subMenu, msgSobreporGraficos, msgConsiderarPausa, sobreporGraficos, resumoPorVolta
 
         if selecao[0]:
                 if abaSelecionada != "Gráficos" and abaSelecionada != "Percurso":
@@ -49,7 +49,7 @@ def tratarEventoSubMenu(selecao, xMouse, yMouse):
                         if abaSelecionada == "Resumo geral":
                                 resumoGeral = gerarResumoGeral(mensagens, considerarPausa)
                         elif abaSelecionada == "Resumo por km":
-                                resumoPorKm = gerarResumoPorKm(mensagens, considerarPausa)
+                                resumoPorKm = gerarResumoPorKm(mensagens, False)
                         elif abaSelecionada == "Resumo por volta":
                                 resumoPorVolta = gerarResumoPorVolta(mensagens, considerarPausa)
                 elif abaSelecionada == "Gráficos":
