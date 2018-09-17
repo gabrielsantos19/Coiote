@@ -14,10 +14,24 @@ def carregarArquvio(diretorio):
 
 
 def desenharGraficos():
-	desenharGrafico(turtles["aba"], CONTEUDO_ABA_Rect, selecionarEmRegistros(mensagens, "timeStamp"), [selecionarEmRegistros(mensagens, "altitude")], ["Altitude"])
-	
-	imagem = [selecionarEmRegistros(mensagens, "altitude"), selecionarEmRegistros(mensagens, "bpm")]
-	desenharGrafico(turtles["aba"], CONTEUDO_ABA_Rect, selecionarEmRegistros(mensagens, "timeStamp"), imagem, ["Altitude", "BPM"])
+	TEMP_Rect = CONTEUDO_ABA_Rect.copy()
+	if sobreporGraficos:
+		imagem = [selecionarEmRegistros(mensagens, "altitude"), selecionarEmRegistros(mensagens, "bpm")]
+		desenharGrafico(turtles["aba"], CONTEUDO_ABA_Rect, selecionarEmRegistros(mensagens, "timeStamp"), [selecionarEmRegistros(mensagens, "altitude")], ["Altitude"])
+	else:
+		TEMP_Rect["width"] /= 2
+		TEMP_Rect["hight"] /= 2
+		#desenharGrafico(turtles["aba"], TEMP_Rect, selecionarEmRegistros(mensagens, "timeStamp"), [selecionarEmRegistros(mensagens, "bpm")], ["Ritmo"])
+
+		TEMP_Rect["xPos"] += CONTEUDO_ABA_Rect["width"] / 2
+		desenharGrafico(turtles["aba"], TEMP_Rect, selecionarEmRegistros(mensagens, "timeStamp"), [selecionarEmRegistros(mensagens, "altitude")], ["Altitude"])
+
+		TEMP_Rect["xPos"] = CONTEUDO_ABA_Rect["xPos"]
+		TEMP_Rect["yPos"] += CONTEUDO_ABA_Rect["height"] / 2
+		desenharGrafico(turtles["aba"], TEMP_Rect, selecionarEmRegistros(mensagens, "timeStamp"), [selecionarEmRegistros(mensagens, "bpm")], ["BPM"])
+
+		TEMP_Rect["xPos"] += CONTEUDO_ABA_Rect["width"] / 2
+		#desenharGrafico(turtles["aba"], TEMP_Rect, selecionarEmRegistros(mensagens, "timeStamp"), [selecionarEmRegistros(mensagens, "bpm")], ["Zonas"])
 
 
 def tratarEventoSubMenu(selecao, xMouse, yMouse):
