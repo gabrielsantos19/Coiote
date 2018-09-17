@@ -28,7 +28,7 @@ def encontrarValido(lst, indice):
             return i
     return len(lst) - 1
 
-def mediaPonderada(lst, tempo):
+def mediaPonderada(lst):
     resultado = 0
     i = 1
     while i < len(lst):
@@ -38,7 +38,7 @@ def mediaPonderada(lst, tempo):
         else:
             novoI = encontrarValido(lst, i)
             mediaArit = (lst[i-1] + lst[novoI]) / 2
-        resultado += mediaArit * ((novoI - (i-1)) / tempo)
+        resultado += mediaArit * (novoI - (i-1))
         i += 1
     return resultado
 

@@ -25,11 +25,11 @@ def gerarResumoPorVolta(mensagens, comPausa=False):
     return listaVoltas
 
 
-def gerarResumoPorKm(mensagens, comPausa=False):
+def gerarResumoPorKm(mensagens, comPausa):
     listaDeGeolocalizacoes = selecionarEmRegistros(mensagens, ["longitude", "latitude"])
     altitudes = selecionarEmRegistros(mensagens, ["altitude"])
     if comPausa:
-        indices = fIndices(mensagens, "pausa", True) 
+        indices = fIndices(mensagens, "pausa") 
     else:
         indices = [(1, len(altitudes) + 1)]
     iIndices = 0
@@ -57,7 +57,7 @@ def gerarResumoPorKm(mensagens, comPausa=False):
     return listaKM
 
 
-def gerarResumoGeral(mensagens, comPausa=False):
+def gerarResumoGeral(mensagens, comPausa):
     resultado = fResumo(mensagens, comPausa)
     return {key: value for key, value in resultado.items() if (value != "-1" and "-1 " not in value)}
 
@@ -78,7 +78,7 @@ def fResumo(mensagens, pausa):
         dist += Calculos.Distancia(listaDeGeolocalizacoes[i[0]:i[1]])
         duracao += float(dados[i[1]-2]["timeStamp"]) - float(dados[i[0]]["timeStamp"])
         dadosParte = dados[i[0]:i[1]]
-        mpBPM += operarItens(dadosParte, "bpm", "media ponderada", float(dados[-1]["timeStamp"]) - float(dados[0]["timeStamp"]))
+        mpBPM += operarItens(dadosParte, "bpm", "media ponderada")
         somaPassos += operarItens(dadosParte, "numeroDePassos", "soma")
         bpmMAXtemp = operarItens(dadosParte, "bpm", "maximo")
         altMAXtemp = operarItens(dadosParte, "altitude", "maximo")
@@ -96,13 +96,15 @@ def fResumo(mensagens, pausa):
 
     if mpBPM < 0:
         mpBPM = -1
+    else:
+        mpBPM = mpBPM // (duracao / 60)
 
     ritmo = (duracao / 60) // dist
             
     return {"Distância total": "{:.2f} km".format(dist), "Tempo total": Calculos.converterTempo(duracao), "Média ponderada de BPM": "{:.0f}".format(mpBPM),"Ritmo médio": "{:.0f} mins/km".format(ritmo), "BPM máximo": "{:.0f}".format(bpmMAX), "BPM mínimo": "{:.0f}".format(bpmMIN), "Cadência": "{:.0f} passos/min".format(cadencia), "Altitude máxima": "{:.6f}".format(altMAX), "Altitude mínima": "{:.6f}".format(altMIN)}
 
 
-def operarItens(lista, item, operacao, tempo=0.0):
+def operarItens(lista, item, operacao):
     lst = []
     resultado = 0
     for x in lista:
@@ -120,7 +122,7 @@ def operarItens(lista, item, operacao, tempo=0.0):
     elif operacao == "minimo":
         return minimo(lst)
     else:
-        return Calculos.mediaPonderada(lst, tempo)
+        return Calculos.mediaPonderada(lst)
 
 
 def minimo(lst):
@@ -158,14 +160,14 @@ def fIndices(mensagens, tipo, puro=False):
                         cont += 1
                 elif mensagens[i]["tipo"] == "e":
                     if mensagens[i]["evento"] == "f" or mensagens[i]["evento"] == "p":
-                        fim = i - cont
+                        fim = i + 1 - cont
                         indices.append((inicio, fim))
                         if not puro:
                             cont += 1
                     elif mensagens[i]["evento"] == "i" or mensagens[i]["evento"] == "r":
-                        inicio = i - cont
                         if not puro:
                             cont += 1
+                        inicio = i + 1 - cont
             except KeyError:
                 pass
             i += 1
