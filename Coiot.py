@@ -39,7 +39,7 @@ def tratarEventoSubMenu(selecao, xMouse, yMouse):
 			if sobreporGraficos:
 				msgSobreporGraficos = "Separar gráficos"
 			else:
-				msgSobreporGraficos = "Sobrepor gráficos"
+				msgSobreporGraficos = "Mesclar gráficos"
 			subMenu[1] = [msgSobreporGraficos]
 	abaSelecionadaNoSubMenu = selecao[1]
 
@@ -162,7 +162,7 @@ subMenu = None
 considerarPausa = True
 msgConsiderarPausa = "Desconsiderar pausas"
 sobreporGraficos = False
-msgSobreporGraficos = "Sobrepor gráficos"
+msgSobreporGraficos = "Mesclar gráficos"
 abaSelecionadaNoSubMenu = 0
 resumoGeral = None
 resumoPorKm = None
