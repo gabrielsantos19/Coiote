@@ -13,10 +13,47 @@ def carregarArquvio(diretorio):
 		coordenadas = selecionarEmRegistros(mensagens, ["longitude", "latitude"])
 
 
+def desenharGraficos():
+	pass
+
+
+def tratarEventoSubMenu(selecao, xMouse, yMouse):
+	global considerarPausa, subMenu, msgSobreporGraficos, msgConsiderarPausa, sobreporGraficos
+
+	if selecao[0]:
+		if abaSelecionada != "Gráficos" and abaSelecionada != "Percurso":
+			considerarPausa = not considerarPausa
+			if considerarPausa:
+				msgConsiderarPausa = "Desconsiderar pausas"
+			else:
+				msgConsiderarPausa = "Considerar pausas"
+			subMenu[1] = [msgConsiderarPausa]
+		elif abaSelecionada == "Gráficos":
+			sobreporGraficos = not sobreporGraficos
+			if sobreporGraficos:
+				msgSobreporGraficos = "Separar gráficos"
+			else:
+				msgSobreporGraficos = "Sobrepor gráficos"
+			subMenu[1] = [msgSobreporGraficos]
+	abaSelecionadaNoSubMenu = selecao[1]
+
+	turtles["aba"].clear()
+	imprimirTexto(turtles["aba"], TITULO_ABA)
+	imprimirSubMenu(turtles["aba"], subMenu)
+	if abaSelecionada == "Resumo geral":
+		imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoGeral)
+	elif abaSelecionada == "Resumo por km":
+		imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm[abaSelecionadaNoSubMenu])
+	elif abaSelecionada == "Resumo por volta":
+		imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta[abaSelecionadaNoSubMenu])
+	elif abaSelecionada == "Gráficos":
+		desenharGraficos()
+
+
 def tratarEvento(xMouse, yMouse):
 	global abaSelecionada, resumoGeral, resumoPorKm, resumoPorVolta, subMenu
-	abaSelecionada = getItemSelecionado(screen, xMouse, yMouse)
-	subMenu = None
+	temp = getItemSelecionado(screen, xMouse, yMouse)
+	if temp: abaSelecionada = temp
 
 	if abaSelecionada == "Abrir arquivo":
 		diretorio = selecionarArquivo()
@@ -28,30 +65,36 @@ def tratarEvento(xMouse, yMouse):
 			desenharCircuito(turtles["miniMapa"], MINI_MAPA_Rect, coordenadas)
 	elif abaSelecionada == "Sair":
 		screen.bye()
-	else:
+	elif checarSelecao(screen, MENU_Rect, xMouse, yMouse) or checarSelecao(screen, MINI_MAPA_Rect, xMouse, yMouse):
 		turtles["aba"].clear()
 		TITULO_ABA["texto"] = abaSelecionada
 		imprimirTexto(turtles["aba"], TITULO_ABA)
-		if abaSelecionada == "Resumo geral":
-			resumoGeral = gerarResumoGeral(mensagens)
-			subMenu = [[], ["Desconsiderar pausas"]]
-			imprimirResumoGeral(turtles["aba"], CONTEUDO_ABA_Rect, resumoGeral)
-		elif abaSelecionada == "Resumo por km":
-			resumoPorKm = gerarResumoPorKm(mensagens)
-			subMenu = [["Km " + str(x+1) for x in range(5)], ["Desconsiderar pausas"]]
-			imprimirResumoPorKm(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm)
-		elif abaSelecionada == "Resumo por volta":
-			resumoPorVolta = gerarResumoPorVolta(mensagens)
-			subMenu = [["Lap " + str(x+1) for x in range(7)], ["Desconsiderar pausas"]]
-			imprimirResumoPorVolta(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta)
-		elif abaSelecionada == "Gráficos":
-			subMenu = [["Ritmo", "Altitude", "BPM", "Zonas de BPM"], ["Sobrepor gráficos"]]
-			pass
-		elif abaSelecionada == "Mapa" and mensagens:
-			desenharCircuito(turtles["aba"], CONTEUDO_ABA_Rect, coordenadas)
+		if mensagens:
+			if abaSelecionada == "Resumo geral":
+				resumoGeral = gerarResumoGeral(mensagens, considerarPausa)
+				subMenu = [[], [msgConsiderarPausa]]
+				imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoGeral)
+			elif abaSelecionada == "Resumo por km":
+				resumoPorKm = gerarResumoPorKm(mensagens, considerarPausa)
+				subMenu = [["Km " + str(x+1) for x in range(len(resumoPorKm))], [msgConsiderarPausa]]
+				imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm[abaSelecionadaNoSubMenu])
+			elif abaSelecionada == "Resumo por volta":
+				resumoPorVolta = gerarResumoPorVolta(mensagens, considerarPausa)
+				subMenu = [["Lap " + str(x+1) for x in range(len(resumoPorVolta))], [msgConsiderarPausa]]
+				imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta[abaSelecionadaNoSubMenu])
+			elif abaSelecionada == "Gráficos":
+				subMenu = [[], [msgSobreporGraficos]]
+				desenharGraficos()
+			elif abaSelecionada == "Percurso":
+				subMenu = [[], []]
+				desenharCircuito(turtles["aba"], CONTEUDO_ABA_Rect, coordenadas)
 
-		if subMenu:
-			imprimirSubMenu(turtles["aba"], subMenu)
+			if subMenu:
+				imprimirSubMenu(turtles["aba"], subMenu)
+	elif subMenu:
+		selecao = checarSelecaoSubMenu(screen, subMenu, xMouse, yMouse)
+		if selecao:
+			tratarEventoSubMenu(selecao, xMouse, yMouse)
 
 
 def atualizar():
@@ -65,18 +108,18 @@ def atualizar():
 		imprimirArquivoInfo(turtles["arquivoInfo"])
 		if mensagens:
 			desenharCircuito(turtles["miniMapa"], MINI_MAPA_Rect, coordenadas)
-		if abaSelecionada == "Abrir arquivo":
-			pass
-		else:
 			imprimirTexto(turtles["aba"], TITULO_ABA)
 			if abaSelecionada == "Resumo geral":
-				imprimirResumoGeral(turtles["aba"], CONTEUDO_ABA_Rect, resumoGeral)
+				imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoGeral)
 			elif abaSelecionada == "Resumo por km":
-				imprimirResumoPorKm(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm)
+				imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm[abaSelecionadaNoSubMenu])
 			elif abaSelecionada == "Resumo por volta":
-				imprimirResumoPorVolta(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta)
+				imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta[abaSelecionadaNoSubMenu])
+			elif abaSelecionada == "Gráficos":
+				desenharGraficos()
 			if subMenu:
 				imprimirSubMenu(turtles["aba"], subMenu)
+	
 	screen.ontimer(atualizar, 300)
 
 
@@ -101,6 +144,11 @@ oldWidth, oldHeight = screen.window_width(), screen.window_height()
 mensagens = []
 abaSelecionada = None
 subMenu = None
+considerarPausa = True
+msgConsiderarPausa = "Desconsiderar pausas"
+sobreporGraficos = False
+msgSobreporGraficos = "Sobrepor gráficos"
+abaSelecionadaNoSubMenu = 0
 resumoGeral = None
 resumoPorKm = None
 resumoPorVolta = None
