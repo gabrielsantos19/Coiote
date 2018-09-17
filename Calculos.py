@@ -77,7 +77,10 @@ def difAltitudes(alts):
 def Ritmos(regis, Geolocs):
     resultado = []
     for i in range(1, len(regis)):
-        resultado.append({"ritmo": (regis[i-1]["timeStamps"] - regis[i]["timeStamps"]) / 60 // Distancia(Geolocs)})
+        try:
+            resultado.append({"ritmo": (float(regis[i]["timeStamp"]) - float(regis[i-1]["timeStamp"])) / 60 // Distancia(Geolocs[i-1:i+1])})
+        except ZeroDivisionError:
+            resultado.append({})
     return resultado
 
 

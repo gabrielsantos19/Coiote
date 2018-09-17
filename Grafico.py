@@ -53,21 +53,37 @@ def desenharEixos(turtle, rect, x, y):
 
 
 def desenharLinha(turtle, lst, x, y, escs, rect, zonas):
-    turtle.goto(x + 20, (y + 20 - rect["height"]) + lst[0] * escs[1])
-    turtle.down()
+    if zonas:
+        escy = 1
+    else:
+        escy = escs[1]
+    try:
+        turtle.goto(x + 20, (y + 20 - rect["height"]) + lst[0] * escy)
+        turtle.down()
+    except TypeError:
+        pass
     i = 1
     for im in lst[1:]:
-        turtle.goto(x + 20 + i * escs[0], (y + 10 - rect["height"]) + im * escs[1])
+        try:
+            turtle.goto(x + 20 + i * escs[0], (y + 20 - rect["height"]) + im * escy)
+            turtle.down()
+        except TypeError:
+            turtle.up()
         i += 1
-        if zonas: 
-            if im in [104, 114, 133, 152, 171]:
-                turtle.up()
-                turtle.goto(x + 12, (y + 10 - rect["height"]) + im * escs[1])
-                turtle.goto(x + 15, (y + 10 - rect["height"]) + im * escs[1])
-                turtle.down()
-                turtle.goto(x + rect["width"] + 130, (y + 10 - rect["height"]) + im * escs[1])
-                turtle.up()
-                turtle.goto(x + 20 + i * escs[0], (y + 10 - rect["height"]) + im * escs[1])
+
+    if zonas == True: 
+        values = [104, 114, 133, 152, 171]
+        p = 0
+        while p < len(values):
+            turtle.up()
+            turtle.goto(x + 12, (y + 10 - rect["height"]) + values[p])
+            turtle.write(p+1)
+            turtle.goto(x + 15, (y + 10 - rect["height"]) + values[p])
+            turtle.down()
+            turtle.goto(x + rect["width"] - 130, (y + 10 - rect["height"]) + values[p])
+            turtle.up()
+            p += 1
+    turtle.up()
 
 
 
@@ -92,7 +108,10 @@ def desenharGrafico(turtle, rect, dominio, imagem, nomeDaImagem, zonas=False):
         turtle.color(cores[i])
         if i == iMaior:
             #desenharEixos(turtle, rect, x, y)
-            desenharGrid(turtle, len(imagem[i]), dominio, Maximos(imagem[i], nomeDaImagem[i].lower()), rect, x, y, zonas)
+            try:
+                desenharGrid(turtle, len(imagem[i]), dominio, Maximos(imagem[i], nomeDaImagem[i].lower()), rect, x, y, zonas)
+            except TypeError:
+                pass
         desenharLinha(turtle, doLst(imagem[i], nomeDaImagem[i].lower()), x, y, escalas, rect, zonas)
     posT = 0
 
