@@ -1,4 +1,5 @@
 from geopy import distance
+import time
 
 def findices(lst):
     indices = []
@@ -105,10 +106,25 @@ def percurso(lat, longi):
             dif_lat, dif_longi = infos[0], infos[1]
         coords.append(((infos[0]-dif_lat)*0.15, (infos[1]-dif_longi)*0.15))
         print(coords[-1])
-    return coords
+    return coors"""
 
 
 def converterTempo(tempo):
-    return time.strtime("%H:%M:%S", time.gmtime(tempo))"""
+    hora = time.strftime("%H", time.gmtime(tempo))
+    if tempo < 7200:
+        hora += " hora"
+    else:
+        hora += "horas"
+    minutos = time.strftime("%M", time.gmtime(tempo)) + " minutos"
+    segundos = time.strftime("%S", time.gmtime(tempo)) + " segundos"
+    if hora[0:2] == "00":
+        hora = ""
+    if minutos[0:2] == "00":
+        minutos = "" 
+        hora = hora
+    if segundos[0:2] == "00":
+        segundos = ""
+    resultado = hora + minutos + segundos
+    return resultado
 
 
