@@ -26,15 +26,30 @@ def imprimirResumoGeral(turtle, rect, resumoGeral):
 
 
 def gerarResumoPorVolta(mensagens):
+    print(mensagens)
     # essa função recebe todas as mensagens
     # o q ela retornar será usado para chamar imprimirResumoPorVolta
-    pass
 
 
-def gerarResumoPorKm(mensagens):
-    # essa função recebe todas as mensagens
-    # o q ela retornar será usado para chamar imprimirResumoPorKm
-    pass
+def gerarResumoPorKm(mensagens, tipo="sem pausa"):
+    listaDeGeolocalizacoes = selecionarEmRegistros(mensagens, ["longitude", "latitude"])
+    altitudes = selecionarEmRegistros(mensagens, ["altitude"])
+    i = 2
+    inicio = 1
+    km = 0
+    distAtual = 0
+    listaKM = []
+    while i < len(altitudes) + 1:
+        distAtual += Calculos.Distancia(listaDeGeolocalizacoes[i-1:i+1])
+        if distAtual >= 1 or i == len(mensagens) - 2:
+            resultadoGeral = fResumo(mensagens[inicio:i+1], tipo)
+            resultadoGeral["Ganho/perda de altitude"] = Calculos.difAltitudes(altitudes)
+            listaKM.append({key: value for key, value in resultadoGeral.items() if key not in ["Altitude máxima", "Altitude mínima", "BPM máxima", "BPM mínima", "Distância total"] and value != -1})
+            km += 1
+            distAtual = 0
+            inicio = i
+        i += 1
+    return listaKM
 
 
 def gerarResumoGeral(mensagens, tipo="sem pausa"):
@@ -52,11 +67,13 @@ def fResumo(mensagens, tipo):
     dist = 0
     duracao = 0
     somaPassos = 0
+    mpBPM = 0
     bpmMAX, bpmMIN, altMAX, altMIN = (-1,) * 4 
     for i in indices:
         dist += Calculos.Distancia(listaDeGeolocalizacoes[i[0]:i[1]])
         duracao += float(dados[i[1]-2]["timeStamp"]) - float(dados[i[0]]["timeStamp"])
         dadosParte = dados[i[0]:i[1]]
+        mpBPM += operarItens(dadosParte, "bpm", "media ponderada", float(dados[-1]["timeStamp"]) - float(dados[0]["timeStamp"]))
         somaPassos += operarItens(dadosParte, "numeroDePassos", "soma")
         bpmMAXtemp = operarItens(dadosParte, "bpm", "maximo")
         altMAXtemp = operarItens(dadosParte, "altitude", "maximo")
@@ -72,12 +89,15 @@ def fResumo(mensagens, tipo):
     else:
         cadencia = somaPassos // (duracao / 60)
 
+    if mpBPM < 0:
+        mpBPM = -1
+
     ritmo = (duracao / 60) // dist
             
-    return {"Distância total": dist, "Tempo total": duracao / 60, "Ritmo médio": ritmo, "BPM máximo": bpmMAX, "BPM mínimo": bpmMIN, "Cadência": cadencia, "Altitude máxima": altMAX, "Altitude mínima": altMIN}
+    return {"Distância total": "{:.2f} km".format(dist), "Tempo total": duracao / 60, "Média ponderada de BPM": "{:.0f}".format(mpBPM),"Ritmo médio": "{:.0f} mins/km".format(ritmo), "BPM máximo": "{:.0f}".format(bpmMAX), "BPM mínimo": "{:.0f}".format(bpmMIN), "Cadência": "{:.0f} passos/min".format(cadencia), "Altitude máxima": "{:.6f}".format(altMAX), "Altitude mínima": "{:.6f}".format(altMIN)}
 
 
-def operarItens(lista, item, operacao):
+def operarItens(lista, item, operacao, tempo=0.0):
     lst = []
     resultado = 0
     for x in lista:
@@ -92,8 +112,10 @@ def operarItens(lista, item, operacao):
         return max(lst)
     elif operacao == "maximo":
         return max(lst)
-    else:
+    elif operacao == "minimo":
         return minimo(lst)
+    else:
+        return Calculos.mediaPonderada(lst, tempo)
 
 
 def minimo(lst):

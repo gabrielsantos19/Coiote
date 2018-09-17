@@ -21,27 +21,25 @@ def findices(lst):
                 cont = 0
     return indices
     
-def encontrar_non_zero(lst, indice):
-    for i in range(indice+1, len(lst)):
-        if lst[i] != 0:
+def encontrarValido(lst, indice):
+    for i in range(indice + 1, len(lst)):
+        if lst[i] != -1:
             return i
     return len(lst) - 1
 
-def media_pond(lst):
+def mediaPonderada(lst, tempo):
     resultado = 0
     i = 1
     while i < len(lst):
-        if lst[i] != 0: 
-            novo_i = i
-            media_arit = (lst[i] + lst[i-1]) / 2
+        if lst[i] != -1: 
+            novoI = i
+            mediaArit = (lst[i] + lst[i-1]) / 2
         else:
-            novo_i = encontrar_non_zero(lst, i)
-            media_arit = (lst[i-1] + lst[novo_i]) / 2
-        resultado += media_arit * ( (novo_i-(i-1)) / len(lst))
+            novoI = encontrarValido(lst, i)
+            mediaArit = (lst[i-1] + lst[novoI]) / 2
+        resultado += mediaArit * ((novoI - (i-1)) / tempo)
+        i += 1
     return resultado
-
-def duracao(tempos):
-    return tempos[-1] - tempos[0]
 
 def Distancia(Geolocs):
     delta_space = 0.0
@@ -53,6 +51,24 @@ def Distancia(Geolocs):
             pass
         i += 1
     return delta_space
+
+def difAltitudes(alts):
+    inicio = 0
+    fim = len(alts) - 1
+    for altitude in alts:
+        if altitude == {}:
+            inicio += 1
+        else:
+            break
+    for i in range(len(alts), inicio):
+        if alts[i] == {}:
+            fim = i - 1
+        else:
+            break
+    if inicio > fim:
+        return -1
+    else:
+        return alts[fim]["altitude"] - alts[inicio]["altitude"]
 
 
 """def ritmo(regis, Geolocs):
