@@ -3,17 +3,7 @@ from Mensagem import selecionarEmRegistros
 import Calculos
 
 
-def imprimirResumoPorVolta(turtle, rect, resumoPorVolta, index):
-    # resumoPorVolta possui o q gerarResumoPorVolta retornar
-    pass
-
-
-def imprimirResumoPorKm(turtle, rect, resumoPorKm, index):
-    # resumoPorKm possui o q gerarResumoPorKm retornar
-    pass
-
-
-def imprimirResumoGeral(turtle, rect, resumoGeral):
+def imprimirResumo(turtle, rect, resumo):
     # resumoGeral possui o q gerarResumoGeral retornar
     ITEM = dict(texto="", fonte="Arial", size=15, align="left", tipo="", cor="#7a7a7a", xPos=rect["xPos"] + 30, yPos=rect["yPos"])
     for item in resumoGeral.items():
