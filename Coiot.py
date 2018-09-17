@@ -2,7 +2,7 @@ from turtle import Turtle
 from Interface import *
 from Mensagem import isolarMensagens, selecionarEmRegistros
 from Resumo import *
-from Grafico import desenharCircuito
+from Grafico import desenharGrafico, desenharCircuito
 
 
 def carregarArquvio(diretorio):
@@ -14,7 +14,7 @@ def carregarArquvio(diretorio):
 
 
 def desenharGraficos():
-	pass
+	desenharGrafico(turtles["aba"], CONTEUDO_ABA_Rect, selecionarEmRegistros(mensagens, "timeStamp"), [selecionarEmRegistros(mensagens, "altitude")], ["Altitude"])
 
 
 def tratarEventoSubMenu(selecao, xMouse, yMouse):

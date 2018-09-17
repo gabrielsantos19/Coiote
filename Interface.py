@@ -109,7 +109,7 @@ def imprimirArquivoInfo(turtle):
 
 
 def imprimirInterface(turtle):
-	desenharFillRect(turtle, COIOT_Rect, "#57ff4f")
+	desenharFillRect(turtle, COIOT_Rect, "Green")
 	desenharFillRect(turtle, CABECALHO_Rect, "#ffffff")
 	desenharFillRect(turtle, MENU_Rect, "#ffffff")
 	desenharFillRect(turtle, MINI_MAPA_Rect, "#ffffff")
@@ -149,5 +149,5 @@ TITULO_ABA = dict(texto="", fonte="Arial", size=25, align="left", tipo="bold", c
 SUB_MENU_Rect = dict(xPos=TITULO_ABA["xPos"]+300, yPos=TITULO_ABA["yPos"], width=500, height=TITULO_ABA["yPos"] - ABA_Rect["yPos"])
 SUB_MENU = dict(texto="", fonte="Arial", size=12, align="center", tipo="normal", cor="white", xPos=SUB_MENU_Rect["xPos"], yPos=SUB_MENU_Rect["yPos"])
 CONTEUDO_ABA_Rect = ABA_Rect.copy()
-CONTEUDO_ABA_Rect["yPos"] += 110
+CONTEUDO_ABA_Rect["yPos"] += 70
 CONTEUDO_ABA_Rect["height"] -= CONTEUDO_ABA_Rect["yPos"] -ABA_Rect["yPos"]
