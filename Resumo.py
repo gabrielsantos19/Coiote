@@ -21,7 +21,7 @@ def gerarResumoPorVolta(mensagens, comPausa=False):
         tempo = float(mensagens[i[1]]["timeStamp"]) - float(mensagens[i[0]]["timeStamp"])
         resultadoGeral = fResumo(mensagens[i[0]:i[1]+1], False)
         resultadoGeral["Tempo da volta"] = tempo
-        listaVoltas.append({key: value for key, value in resultadoGeral.items() if key not in ["Altitude máxima", "Altitude mínima", "Distância total"] and (value != "-1" and "-1 " not in value)})
+        listaVoltas.append({key: value for key, value in resultadoGeral.items() if key not in ["Altitude máxima", "Altitude mínima", "Distância total"]})
     return listaVoltas
 
 
