@@ -3,12 +3,12 @@ from Mensagem import selecionarEmRegistros
 import Calculos
 
 
-def imprimirResumoPorVolta(turtle, rect, resumoPorVolta):
+def imprimirResumoPorVolta(turtle, rect, resumoPorVolta, index):
     # resumoPorVolta possui o q gerarResumoPorVolta retornar
     pass
 
 
-def imprimirResumoPorKm(turtle, rect, resumoPorKm):
+def imprimirResumoPorKm(turtle, rect, resumoPorKm, index):
     # resumoPorKm possui o q gerarResumoPorKm retornar
     pass
 
@@ -25,13 +25,18 @@ def imprimirResumoGeral(turtle, rect, resumoGeral):
             ITEM["yPos"] += 30
 
 
-def gerarResumoPorVolta(mensagens):
-    print(mensagens)
-    # essa função recebe todas as mensagens
-    # o q ela retornar será usado para chamar imprimirResumoPorVolta
+def gerarResumoPorVolta(mensagens, comPausa=False):
+    indices = fIndices(mensagens, "voltas")
+    listaVoltas = []
+    for i in indices:
+        tempo = float(mensagens[i[1]]["timeStamp"]) - float(mensagens[i[0]]["timeStamp"])
+        resultadoGeral = fResumo(mensagens[i[0]:i[1]+1], False)
+        resultadoGeral["Tempo da volta"] = tempo
+        listaVoltas.append({key: value for key, value in resultadoGeral.items() if key not in ["Altitude máxima", "Altitude mínima", "Distância total"] and (value != "-1" and "-1 " not in value)})
+    return listaVoltas
 
 
-def gerarResumoPorKm(mensagens, tipo="sem pausa"):
+def gerarResumoPorKm(mensagens, comPausa=False):
     listaDeGeolocalizacoes = selecionarEmRegistros(mensagens, ["longitude", "latitude"])
     altitudes = selecionarEmRegistros(mensagens, ["altitude"])
     i = 2
@@ -44,7 +49,7 @@ def gerarResumoPorKm(mensagens, tipo="sem pausa"):
         if distAtual >= 1 or i == len(mensagens) - 2:
             resultadoGeral = fResumo(mensagens[inicio:i+1], tipo)
             resultadoGeral["Ganho/perda de altitude"] = Calculos.difAltitudes(altitudes)
-            listaKM.append({key: value for key, value in resultadoGeral.items() if key not in ["Altitude máxima", "Altitude mínima", "BPM máxima", "BPM mínima", "Distância total"] and value != -1})
+            listaKM.append({key: value for key, value in resultadoGeral.items() if key not in ["Altitude máxima", "Altitude mínima", "BPM máxima", "BPM mínima", "Distância total"] and (value != "-1" and "-1 " not in value)})
             km += 1
             distAtual = 0
             inicio = i
@@ -52,19 +57,19 @@ def gerarResumoPorKm(mensagens, tipo="sem pausa"):
     return listaKM
 
 
-def gerarResumoGeral(mensagens, tipo="sem pausa"):
-    resultado = fResumo(mensagens, tipo)
-    return {key: value for key, value in resultado.items() if value != -1}
+def gerarResumoGeral(mensagens, comPausa=False):
+    resultado = fResumo(mensagens, comPausa)
+    return {key: value for key, value in resultado.items() if (value != "-1" and "-1 " not in value)}
 
 
-def fResumo(mensagens, tipo):
+def fResumo(mensagens, pausa):
     listaDeGeolocalizacoes = selecionarEmRegistros(mensagens, ["longitude", "latitude"])
     dados = selecionarEmRegistros(mensagens, ["timeStamp", "altitude", "bpm", "numeroDePassos"])
-    if tipo != "sem pausa":
-        indices = fIndices(tipo)
+    if pausa == True:
+        indices = fIndices(mensagens, "pausa")
     else:
         indices = [(0, len(dados) + 1)]
-    dist = 0
+    dist = 0 
     duracao = 0
     somaPassos = 0
     mpBPM = 0
@@ -94,7 +99,7 @@ def fResumo(mensagens, tipo):
 
     ritmo = (duracao / 60) // dist
             
-    return {"Distância total": "{:.2f} km".format(dist), "Tempo total": duracao / 60, "Média ponderada de BPM": "{:.0f}".format(mpBPM),"Ritmo médio": "{:.0f} mins/km".format(ritmo), "BPM máximo": "{:.0f}".format(bpmMAX), "BPM mínimo": "{:.0f}".format(bpmMIN), "Cadência": "{:.0f} passos/min".format(cadencia), "Altitude máxima": "{:.6f}".format(altMAX), "Altitude mínima": "{:.6f}".format(altMIN)}
+    return {"Distância total": "{:.2f} km".format(dist), "Tempo total": Calculos.converterTempo(duracao), "Média ponderada de BPM": "{:.0f}".format(mpBPM),"Ritmo médio": "{:.0f} mins/km".format(ritmo), "BPM máximo": "{:.0f}".format(bpmMAX), "BPM mínimo": "{:.0f}".format(bpmMIN), "Cadência": "{:.0f} passos/min".format(cadencia), "Altitude máxima": "{:.6f}".format(altMAX), "Altitude mínima": "{:.6f}".format(altMIN)}
 
 
 def operarItens(lista, item, operacao, tempo=0.0):
@@ -125,4 +130,41 @@ def minimo(lst):
             minimo = x
     return minimo
             
+
+def fIndices(mensagens, tipo):
+    inicio = 0
+    fim = 0
+    i = 0
+    indices = []
+    if tipo == "voltas":
+        fim = 1
+        i = 2
+        for x in mensagens[2:]:
+            try:
+                if x["tipo"] == "l":
+                    inicio = fim+1
+                    fim = i-1
+                    indices.append((inicio, fim))
+            except KeyError:
+                pass
+            i += 1
+
+    elif tipo == "pausa":
+        cont = 0
+        while i != len(mensagens):
+            try:
+                if x["tipo"] == "l":
+                    cont += 1
+                elif x["tipo"] == "e":
+                    if x["evento"] == "f" or x["evento"] == "p":
+                        fim = i - cont
+                        indices.append((inicio, fim))
+                        cont += 1
+                    elif x["evento"] == "i" or x["evento"] == "r":
+                        inicio = i - cont
+                        cont += 1
+            except KeyError:
+                pass
+    return indices
+
 
