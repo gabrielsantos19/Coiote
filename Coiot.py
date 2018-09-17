@@ -14,7 +14,8 @@ def carregarArquvio(diretorio):
 
 
 def desenharGraficos():
-	desenharGrafico(turtles["aba"], CONTEUDO_ABA_Rect, selecionarEmRegistros(mensagens, "timeStamp"), [selecionarEmRegistros(mensagens, "altitude")], ["Altitude"])
+	desenharGrafico(turtles["aba"], CONTEUDO_ABA_Rect, selecionarEmRegistros(mensagens, "timeStamp"), selecionarEmRegistros(mensagens, "altitude"), ["Altitude"])
+	desenharGrafico(turtles["aba"], CONTEUDO_ABA_Rect, selecionarEmRegistros(mensagens, "timeStamp"), selecionarEmRegistros(mensagens, ["altitude", "bpm"], ["Altitude", "BPM"]))
 
 
 def tratarEventoSubMenu(selecao, xMouse, yMouse):
