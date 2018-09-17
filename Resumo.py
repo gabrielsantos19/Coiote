@@ -29,7 +29,7 @@ def gerarResumoPorKm(mensagens, comPausa):
     listaDeGeolocalizacoes = selecionarEmRegistros(mensagens, ["longitude", "latitude"])
     altitudes = selecionarEmRegistros(mensagens, ["altitude"])
     if comPausa:
-        indices = fIndices(mensagens, "pausa") 
+        indices = fIndices(mensagens, "pausa", True) 
     else:
         indices = [(1, len(altitudes) + 1)]
     iIndices = 0
@@ -41,7 +41,7 @@ def gerarResumoPorKm(mensagens, comPausa):
     while i < len(altitudes) + 1:
         distAtual += Calculos.Distancia(listaDeGeolocalizacoes[i-1:i+1])
         if distAtual >= 1 or i == len(mensagens) - 2:
-            resultadoGeral = fResumo(mensagens[inicio:i+1], tipo)
+            resultadoGeral = fResumo(mensagens[inicio:i+1], comPausa)
             resultadoGeral["Ganho/perda de altitude"] = Calculos.difAltitudes(altitudes)
             listaKM.append({key: value for key, value in resultadoGeral.items() if key not in ["Altitude máxima", "Altitude mínima", "BPM máxima", "BPM mínima", "Distância total"] and (value != "-1" and "-1 " not in value)})
             km += 1
