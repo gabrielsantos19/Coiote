@@ -2,7 +2,7 @@ from turtle import Turtle
 from Interface import *
 from Mensagem import isolarMensagens, selecionarEmRegistros
 from Resumo import *
-from Grafico import desenharCircuito
+from Grafico import desenharGrafico, desenharCircuito
 
 
 def carregarArquvio(diretorio):
@@ -14,7 +14,7 @@ def carregarArquvio(diretorio):
 
 
 def desenharGraficos():
-	pass
+	desenharGrafico(turtles["aba"], CONTEUDO_ABA_Rect, selecionarEmRegistros(mensagens, "timeStamp"), [selecionarEmRegistros(mensagens, "altitude")], ["Altitude"])
 
 
 def tratarEventoSubMenu(selecao, xMouse, yMouse):
@@ -39,7 +39,7 @@ def tratarEventoSubMenu(selecao, xMouse, yMouse):
 			if sobreporGraficos:
 				msgSobreporGraficos = "Separar gráficos"
 			else:
-				msgSobreporGraficos = "Sobrepor gráficos"
+				msgSobreporGraficos = "Mesclar gráficos"
 			subMenu[1] = [msgSobreporGraficos]
 	abaSelecionadaNoSubMenu = selecao[1]
 
@@ -78,18 +78,24 @@ def tratarEvento(xMouse, yMouse):
 		if mensagens:
 			if abaSelecionada == "Resumo geral":
 				resumoGeral = gerarResumoGeral(mensagens, considerarPausa)
-				#resumoGeral = {"ABC": 253452, "fasf": 4354, "htre": 534}
-				subMenu = [[], [msgConsiderarPausa]]
+				if resumoGeral:
+					subMenu = [[], [msgConsiderarPausa]]
+				else:
+					subMenu = [[], []]
 				imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoGeral)
 			elif abaSelecionada == "Resumo por km":
 				resumoPorKm = gerarResumoPorKm(mensagens, considerarPausa)
-				#resumoPorKm = [{"ABC": 543, "fasf": 654, "htre": 22}, {"ABC": 87, "fasf": 567, "htre": 87}]
-				subMenu = [["Km " + str(x+1) for x in range(len(resumoPorKm))], [msgConsiderarPausa]]
+				if resumoPorKm:
+					subMenu = [["Km " + str(x+1) for x in range(len(resumoPorKm))], [msgConsiderarPausa]]
+				else:
+					subMenu = [[], []]
 				imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm[abaSelecionadaNoSubMenu])
 			elif abaSelecionada == "Resumo por volta":
 				resumoPorVolta = gerarResumoPorVolta(mensagens, considerarPausa)
-				#resumoPorVolta = [{"ABC": 543, "fasf": 654, "htre": 22}, {"ABC": 87, "fasf": 567, "htre": 87}, {"ABC": 1, "fasf": 1, "htre": 1}]
-				subMenu = [["Lap " + str(x+1) for x in range(len(resumoPorVolta))], [msgConsiderarPausa]]
+				if resumoPorVolta:
+					subMenu = [["Lap "+str(x+1) for x in range(len(resumoPorVolta))], [msgConsiderarPausa]]
+				else:
+					subMenu = [[], []]
 				imprimirResumo(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta[abaSelecionadaNoSubMenu])
 			elif abaSelecionada == "Gráficos":
 				subMenu = [[], [msgSobreporGraficos]]
@@ -156,7 +162,7 @@ subMenu = None
 considerarPausa = True
 msgConsiderarPausa = "Desconsiderar pausas"
 sobreporGraficos = False
-msgSobreporGraficos = "Sobrepor gráficos"
+msgSobreporGraficos = "Mesclar gráficos"
 abaSelecionadaNoSubMenu = 0
 resumoGeral = None
 resumoPorKm = None
