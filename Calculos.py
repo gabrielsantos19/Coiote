@@ -128,3 +128,9 @@ def converterTempo(tempo):
     return resultado
 
 
+def Afastamento(coordenadas, escx, escy, rect, origens):
+    minX, maxX = escx * (min([v["x"] for v in coordenadas]) - origens[0]) + rect["width"] / 2, escx * (max([v["x"] for v in coordenadas]) - origens[0]) + rect["width"] / 2
+    minY, maxY = escy * (min([v["y"] for v in coordenadas]) - origens[1]) + rect["height"] / 2, escy * (max([v["y"] for v in coordenadas]) - origens[1]) + rect["height"] / 2
+    distX = (rect["width"] - maxX) - minX
+    distY = (rect["height"] - maxY) - minY
+    return distX, distY

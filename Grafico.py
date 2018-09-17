@@ -116,6 +116,8 @@ def desenharCircuito(turtle, rect, listaDeGeolocalizacoes):
     escx = ((rect["width"] / 2) - 5) / (max([abs(v["x"] - origem[0]) for v in coordenadas]))
     escy = ((rect["height"] / 2) - 5) / (max([abs(v["y"] - origem[1]) for v in coordenadas]))
 
+    afastamentoX, afastamentoY = Calculos.Afastamento(coordenadas, escx, escy, rect, (origem[0], origem[1]))
+
     km = 0
     distAtual = 0
     distTotal = Calculos.Distancia(listaDeGeolocalizacoes)
@@ -124,8 +126,8 @@ def desenharCircuito(turtle, rect, listaDeGeolocalizacoes):
 
     for i in range(len(coordsTemp)):
         try:
-            xGo = x + (rect["width"] / 2) + (coordsTemp[i]["x"] - origem[0]) * escx
-            yGo = y - (rect["height"]/ 2) + (coordsTemp[i]["y"] - origem[1]) * escy
+            xGo = (afastamentoX / 2) + (x + (rect["width"] / 2) + (coordsTemp[i]["x"] - origem[0]) * escx)
+            yGo = (afastamentoY / 2) + (y - (rect["height"]/ 2) + (coordsTemp[i]["y"] - origem[1]) * escy)
             turtle.goto(xGo, yGo)
             if i > 0:
                 distAtual += Calculos.Distancia(listaDeGeolocalizacoes[i-1:i+1])

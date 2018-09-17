@@ -39,8 +39,13 @@ def gerarResumoPorVolta(mensagens, comPausa=False):
 def gerarResumoPorKm(mensagens, comPausa=False):
     listaDeGeolocalizacoes = selecionarEmRegistros(mensagens, ["longitude", "latitude"])
     altitudes = selecionarEmRegistros(mensagens, ["altitude"])
-    i = 2
-    inicio = 1
+    if comPausa:
+        indices = fIndices(mensagens, "pausa", True) 
+    else:
+        indices = [(1, len(altitudes) + 1)]
+    iIndices = 0
+    i = indices[0][0] + 1
+    inicio = i - 1
     km = 0
     distAtual = 0
     listaKM = []
@@ -54,6 +59,12 @@ def gerarResumoPorKm(mensagens, comPausa=False):
             distAtual = 0
             inicio = i
         i += 1
+        if i == indices[iIndices][1]:
+            iIndices += 1
+            if iIndices == len(indices):
+                break
+            i = indices[iIndices][0] + 1
+            inicio = i - 1
     return listaKM
 
 
@@ -131,7 +142,7 @@ def minimo(lst):
     return minimo
             
 
-def fIndices(mensagens, tipo):
+def fIndices(mensagens, tipo, puro=False):
     inicio = 0
     fim = 0
     i = 0
@@ -153,18 +164,22 @@ def fIndices(mensagens, tipo):
         cont = 0
         while i != len(mensagens):
             try:
-                if x["tipo"] == "l":
-                    cont += 1
-                elif x["tipo"] == "e":
-                    if x["evento"] == "f" or x["evento"] == "p":
+                if mensagens[i]["tipo"] == "l":
+                    if not puro:
+                        cont += 1
+                elif mensagens[i]["tipo"] == "e":
+                    if mensagens[i]["evento"] == "f" or mensagens[i]["evento"] == "p":
                         fim = i - cont
                         indices.append((inicio, fim))
-                        cont += 1
-                    elif x["evento"] == "i" or x["evento"] == "r":
+                        if not puro:
+                            cont += 1
+                    elif mensagens[i]["evento"] == "i" or mensagens[i]["evento"] == "r":
                         inicio = i - cont
-                        cont += 1
+                        if not puro:
+                            cont += 1
             except KeyError:
                 pass
+            i += 1
     return indices
 
 
