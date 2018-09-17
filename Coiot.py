@@ -28,6 +28,12 @@ def tratarEventoSubMenu(selecao, xMouse, yMouse):
 			else:
 				msgConsiderarPausa = "Considerar pausas"
 			subMenu[1] = [msgConsiderarPausa]
+			if abaSelecionada == "Resumo geral":
+				resumoGeral = gerarResumoGeral(mensagens, considerarPausa)
+			elif abaSelecionada == "Resumo por km":
+				resumoPorKm = gerarResumoPorKm(mensagens, considerarPausa)
+			elif abaSelecionada == "Resumo por volta":
+				resumoPorVolta = gerarResumoPorVolta(mensagens, considerarPausa)
 		elif abaSelecionada == "Gráficos":
 			sobreporGraficos = not sobreporGraficos
 			if sobreporGraficos:
