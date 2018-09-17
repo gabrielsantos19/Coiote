@@ -4,9 +4,8 @@ import Calculos
 
 
 def imprimirResumo(turtle, rect, resumo):
-    # resumoGeral possui o q gerarResumoGeral retornar
     ITEM = dict(texto="", fonte="Arial", size=15, align="left", tipo="", cor="#7a7a7a", xPos=rect["xPos"] + 30, yPos=rect["yPos"])
-    for item in resumoGeral.items():
+    for item in resumo.items():
             ITEM["xPos"] = rect["xPos"] + 40
             for i in item:
                     ITEM["texto"] = i
