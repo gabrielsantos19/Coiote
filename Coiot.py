@@ -77,11 +77,11 @@ def tratarEvento(xMouse, yMouse):
 			elif abaSelecionada == "Resumo por km":
 				resumoPorKm = gerarResumoPorKm(mensagens)
 				subMenu = [["Km " + str(x+1) for x in range(len(resumoPorKm))], [msgConsiderarPausa]]
-				imprimirResumoPorKm(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm, considerarPausa)
+				imprimirResumoPorKm(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm, considerarPausa, abaSelecionadaNoSubMenu)
 			elif abaSelecionada == "Resumo por volta":
 				resumoPorVolta = gerarResumoPorVolta(mensagens)
 				subMenu = [["Lap " + str(x+1) for x in range(len(resumoPorVolta))], [msgConsiderarPausa]]
-				imprimirResumoPorVolta(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta, considerarPausa)
+				imprimirResumoPorVolta(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta, considerarPausa, abaSelecionadaNoSubMenu)
 			elif abaSelecionada == "Gráficos":
 				subMenu = [[], [msgSobreporGraficos]]
 				desenharGraficos()
@@ -112,9 +112,9 @@ def atualizar():
 			if abaSelecionada == "Resumo geral":
 				imprimirResumoGeral(turtles["aba"], CONTEUDO_ABA_Rect, resumoGeral, considerarPausa)
 			elif abaSelecionada == "Resumo por km":
-				imprimirResumoPorKm(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm, considerarPausa)
+				imprimirResumoPorKm(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorKm, considerarPausa, abaSelecionadaNoSubMenu)
 			elif abaSelecionada == "Resumo por volta":
-				imprimirResumoPorVolta(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta, considerarPausa)
+				imprimirResumoPorVolta(turtles["aba"], CONTEUDO_ABA_Rect, resumoPorVolta, considerarPausa, abaSelecionadaNoSubMenu)
 			elif abaSelecionada == "Gráficos":
 				desenharGraficos()
 			if subMenu:
