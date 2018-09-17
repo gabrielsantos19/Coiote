@@ -71,42 +71,14 @@ def difAltitudes(alts):
     else:
         return alts[fim]["altitude"] - alts[inicio]["altitude"]
 
-
-"""def ritmo(regis, Geolocs):
     return (regis[-1]-regis[0])/60 // distancia(Geolocs)
 
 
 def Ritmos(regis, Geolocs):
     resultado = []
     for i in range(1, len(regis)):
-        try:
-            resultado.append((regis[i-1] - regis[i]) / 60 // Distancia(Geolocs))
+        resultado.append({"ritmo": (regis[i-1]["timeStamps"] - regis[i]["timeStamps"]) / 60 // Distancia(Geolocs)})
     return resultado
-
-def cadencia(tempos, passos):
-    return sum(passos) // (tempos[-1]-tempos[0])/60
-
-def resumo_corrida(dados, tempos, lat, longi, alt, pausa):
-    if pausa:
-        indices = findices(dados)
-    else:
-        indices = [(0, len(dados))]
-    dist = 0
-    dur = 0
-    for i in indices:
-        dist += distancia(lat[i[0]:i[1]], longi[i[0]:i[1]])
-        dur += duracao(tempos[i[0]:i[1]])
-    return [dist, dur, max(alt), min(alt)]
-
-def percurso(lat, longi):
-    coords = []
-    for i in range(len(lat)):
-        infos = from_latlon(lat[i], longi[i])
-        if i == 0:
-            dif_lat, dif_longi = infos[0], infos[1]
-        coords.append(((infos[0]-dif_lat)*0.15, (infos[1]-dif_longi)*0.15))
-        print(coords[-1])
-    return coors"""
 
 
 def converterTempo(tempo):

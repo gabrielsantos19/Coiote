@@ -33,9 +33,10 @@ def gridy(turtle, maximo, rect, x, y):
         turtle.up()
 
 
-def desenharGrid(turtle, tam, dom, maximo, rect, x, y):
+def desenharGrid(turtle, tam, dom, maximo, rect, x, y, zonas):
     gridx(turtle, tam, float(dom[-1]["timeStamp"]) - float(dom[0]["timeStamp"]), rect, x, y)
-    gridy(turtle, maximo, rect, x, y)
+    if zonas == False:
+        gridy(turtle, maximo, rect, x, y)
 
 
 def desenharEixos(turtle, rect, x, y):
@@ -51,38 +52,39 @@ def desenharEixos(turtle, rect, x, y):
     turtle.up()
 
 
-def desenharLinha(turtle, lst, x, y, escs, rect):
+def desenharLinha(turtle, lst, x, y, escs, rect, zonas):
     turtle.goto(x + 20, (y + 20 - rect["height"]) + lst[0] * escs[1])
     turtle.down()
     i = 1
     for im in lst[1:]:
         turtle.goto(x + 20 + i * escs[0], (y + 10 - rect["height"]) + im * escs[1])
         i += 1
+        if zonas: 
+            if im in [104, 114, 133, 152, 171]:
+                turtle.up()
+                turtle.goto(x + 12, (y + 10 - rect["height"]) + im * escs[1])
+                turtle.goto(x + 15, (y + 10 - rect["height"]) + im * escs[1])
+                turtle.down()
+                turtle.goto(x + rect["width"] + 130, (y + 10 - rect["height"]) + im * escs[1])
+                turtle.up()
+                turtle.goto(x + 20 + i * escs[0], (y + 10 - rect["height"]) + im * escs[1])
 
 
-def desenharGrafico(turtle, rect, dominio, imagem, nomeDaImagem):
-    # rect é um dicionário nesse tipo {"xPos": valor, "yPos": valor, "width": valor, "height": valor}
-    # ele é definido em um plano diferente, onde o ponto (0, 0) refere-se ao canto superior-esquerdo
+
+def desenharGrafico(turtle, rect, dominio, imagem, nomeDaImagem, zonas=False):
     screen = turtle.getscreen()
     x, y = transladarParaCentralizado(screen, x=rect["xPos"], y=rect["yPos"])
-    # esse código gera o ponto equivalente no plano onde (0, 0) é o centro da tela
-    
-    # dominio é uma lista com os timestamps dos registros
-    
-    # imagem é uma lista de listas, cada elemento de imagem é uma lista com todos os valores de um atributo dos registros
-    # por exemplo [[todos os BPMs][todas as alturas]] que é um gráfico com duas linhas
-    # ou [[todas as alturas]] que no caso seria um gráfico só com uma linha mas continua sendo uma lista de lista
-    # caso algum elemento na imagem esteja faltando vai constar None [["432", "423", None, "6757"]]
-    
-    # nomeDaImagem é uma lista com a definição de quais dados estão na imagem
-    # para imagem = [[todos os BPMs][todas as alturas]] nomeDaImagem seria ["BPMs", "Altura"]
+
     iMaior = 0
 
     for i in range(len(nomeDaImagem)):
         if Maximos(imagem[i], nomeDaImagem[i].lower()) > Maximos(imagem[iMaior], nomeDaImagem[iMaior].lower()):
             iMaior = i
 
-    escalas = ((rect["width"] - 150) / len(imagem[iMaior]), (rect["height"] - 25) / Maximos(imagem[iMaior], nomeDaImagem[iMaior].lower()))
+    escalas = [(rect["width"] - 150) / len(imagem[iMaior]), (rect["height"] - 25) / Maximos(imagem[iMaior], nomeDaImagem[iMaior].lower())]
+
+    #if nomeDaImagem == ["Zonas"]:
+    #    escalas[1] = (rect["height"] - 25) / 
     
     cores = ["red", "blue"]
     cores.insert(iMaior, "black")
@@ -90,8 +92,8 @@ def desenharGrafico(turtle, rect, dominio, imagem, nomeDaImagem):
         turtle.color(cores[i])
         if i == iMaior:
             #desenharEixos(turtle, rect, x, y)
-            desenharGrid(turtle, len(imagem[i]), dominio, Maximos(imagem[i], nomeDaImagem[i].lower()), rect, x, y)
-        desenharLinha(turtle, doLst(imagem[i], nomeDaImagem[i].lower()), x, y, escalas, rect)
+            desenharGrid(turtle, len(imagem[i]), dominio, Maximos(imagem[i], nomeDaImagem[i].lower()), rect, x, y, zonas)
+        desenharLinha(turtle, doLst(imagem[i], nomeDaImagem[i].lower()), x, y, escalas, rect, zonas)
     posT = 0
 
     for i in range(len(nomeDaImagem)):
