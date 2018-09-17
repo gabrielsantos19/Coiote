@@ -3,59 +3,60 @@ from utm import from_latlon
 import Calculos
 
 
-def gridx(duracao, rect, x, y):
+def gridx(turtle, tam, duracao, rect, x, y):
     cont = 0
-    pos = cont + x + 10
-    interv = duracao / width
-    while pos <= x + rect["width"] - 5:
-        turtle.goto(pos, y - rect["height"] + 5)
+    pos = cont + x + 20
+    interv = (duracao / 60) / (rect["width"] - 150)
+    while pos <= x + rect["width"] - 130:
+        turtle.goto(pos, y - rect["height"])
         turtle.write(int(cont * interv), align="center")
-        turt.goto(pos, y - rect["height"] + 7)
-        turt.down()
-        turt.goto(pos, y - rect["height"] + 13)
-        pos += rect["width"] - 15 // 10
-        cont += rect["width"] - 15 // 10
-        turt.up()
+        turtle.goto(pos, y - rect["height"] + 15)
+        turtle.down()
+        turtle.goto(pos, y)
+        pos += (rect["width"] - 150) // 10
+        cont += (rect["width"] - 150) // 10
+        turtle.up()
 
 
-def gridy(maximo, rect, x, y):
+def gridy(turtle, maximo, rect, x, y):
     cont = 0
-    pos = cont + y - rect["height"] + 10
-    interv = maximo / 200
+    pos = cont + y - rect["height"] + 20
+    interv = maximo / (rect["height"] - 25)
     while pos <= y - 5:
-        turtle.goto(x - 2, pos - 8)
-        turt.write(int(cont * interv, align="right"))
-        turt.goto(x + 7, pos)
-        turt.down()
-        turt.goto(x + rect["width"] - 5, pos)
-        pos += rect["height"] - 15 // 10
-        cont += rect["height"] - 15 // 10 
-        turt.up()
+        turtle.goto(x + 12, pos - 8)
+        turtle.write(int(cont * interv), align="right")
+        turtle.goto(x + 15, pos)
+        turtle.down()
+        turtle.goto(x + rect["width"] - 130, pos)
+        pos += (rect["height"] - 25) // 10
+        cont += (rect["height"] - 25) // 10 
+        turtle.up()
 
 
-def desenharGrid(dom, lst, rect, x, y):
-    gridx(dom[-1] - dom[0], rect, x, y)
-    gridy(max(lst), rect, x, y)
+def desenharGrid(turtle, tam, dom, maximo, rect, x, y):
+    gridx(turtle, tam, float(dom[-1]["timeStamp"]) - float(dom[0]["timeStamp"]), rect, x, y)
+    gridy(turtle, maximo, rect, x, y)
 
 
-def desenharEixos(rect, x, y):
-    #eixo x
-    turtle.goto(x + 10, pos_y)
-    turtle.down()
-    turtle.goto(x + 10, y - rect["height"] + 10)
-    turtle.up()
+def desenharEixos(turtle, rect, x, y):
     #eixo y
-    turtle.goto(x + 5, y - rect["height"] + 10)
+    turtle.goto(x + 20, y - 5)
     turtle.down()
-    turtle.goto(x + rect["width"] - 5, y - rect["height"] + 10) 
+    turtle.goto(x + 20, y - rect["height"] + 20)
+    turtle.up()
+    #eixo x
+    turtle.goto(x + 15, y - rect["height"] + 20)
+    turtle.down()
+    turtle.goto(x + rect["width"] - 50, y - rect["height"] + 130) 
     turtle.up()
 
 
-def desenharLinha(lst, x, y, escs, rect):
-    turtle.goto(x + 10, (y + 10 - rect["height"] + lst[0]) * escs[1])
+def desenharLinha(turtle, lst, x, y, escs, rect):
+    turtle.goto(x + 20, (y + 20 - rect["height"]) + lst[0] * escs[1])
     turtle.down()
+    i = 1
     for im in lst[1:]:
-        turtle.goto((x + 10 + i) * escs[0], (y + im + 10) * escs[1])
+        turtle.goto(x + 20 + i * escs[0], (y + 10 - rect["height"]) + im * escs[1])
         i += 1
 
 
@@ -76,21 +77,34 @@ def desenharGrafico(turtle, rect, dominio, imagem, nomeDaImagem):
     # nomeDaImagem é uma lista com a definição de quais dados estão na imagem
     # para imagem = [[todos os BPMs][todas as alturas]] nomeDaImagem seria ["BPMs", "Altura"]
     iMaior = 0
-    for i in range(len(imagem)):
-        if max(len[i]) > max(len[i_maior]):
+
+    for i in range(len(nomeDaImagem)):
+        if Maximos(imagem[i], nomeDaImagem[i].lower()) > Maximos(imagem[iMaior], nomeDaImagem[iMaior].lower()):
             iMaior = i
 
-    escalas = ((rect["width"] - 15) / (dominio[-1] - dominio[0]), rect["height"] - 15 / max(imagem[iMaior]))
-
+    escalas = ((rect["width"] - 150) / len(imagem[iMaior]), (rect["height"] - 25) / Maximos(imagem[iMaior], nomeDaImagem[iMaior].lower()))
+    
     cores = ["red", "blue"]
-    cores.insert("black", iMaior)
+    cores.insert(iMaior, "black")
     for i in range(len(imagem)):
         turtle.color(cores[i])
         if i == iMaior:
-            desenharEixos(rect, x, y)
-            desenharGrid(dominio, imagem[i], rect, x, y)
-        desenharLinha(imagem[i], x, y, escalas, rect)
-#---------------------------------------------------------------------------------------------------------------------
+            #desenharEixos(turtle, rect, x, y)
+            desenharGrid(turtle, len(imagem[i]), dominio, Maximos(imagem[i], nomeDaImagem[i].lower()), rect, x, y)
+        desenharLinha(turtle, doLst(imagem[i], nomeDaImagem[i].lower()), x, y, escalas, rect)
+    posT = 0
+
+    for i in range(len(nomeDaImagem)):
+        turtle.up()
+        turtle.goto(x + rect["width"] - 115, y - 45 + posT)
+        turtle.down()
+        turtle.color(cores[i])
+        turtle.goto(x + rect["width"] - 100, y - 45 + posT)
+        turtle.up()
+        turtle.color("black")
+        turtle.goto(x + rect["width"] - 95, y - 53 + posT)
+        turtle.write(nomeDaImagem[i])
+        posT -= 15
     
     
 def desenharCircuito(turtle, rect, listaDeGeolocalizacoes):
@@ -159,3 +173,24 @@ def desenharCircuito(turtle, rect, listaDeGeolocalizacoes):
     # listaDeGeolocalizadores é uma lista de dicionários tipo: [{"longitude": 234, "latitude": 423}, {"longitude": 43, "latitude": 123}]
     # caso algum elemento não exista o dicionário não vai ter a chave
     # se latitude n existir um um registro vai ficar somente a longitude, caso n exista nenhum, vai ficar um dicionário vazio {}
+
+def Maximos(lst, nome):
+    maximo = 0
+    for x in lst:
+        try:
+            if x[nome] > maximo:
+                maximo = x[nome]
+        except KeyError:
+            pass
+    return maximo
+
+def doLst(lst, nome):
+    lista = []
+    for x in lst:
+        try:
+            lista.append(x[nome])
+        except KeyError:
+            lista.append(" ")
+    return lista
+
+
